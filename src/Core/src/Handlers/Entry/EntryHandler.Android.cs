@@ -223,7 +223,6 @@ namespace Microsoft.Maui.Handlers
 				else if (evt?.KeyCode is null && (actionId == ImeAction.Done || actionId == currentInputImeFlag))
 				{
 					VirtualView?.Completed();
-					handled = true;
 				}
 			}
 
