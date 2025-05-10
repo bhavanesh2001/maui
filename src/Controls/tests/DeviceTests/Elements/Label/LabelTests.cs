@@ -61,6 +61,38 @@ namespace Microsoft.Maui.DeviceTests
 			Assert.False(platformViewReference.IsAlive, "PlatformView should not be alive!");
 		}
 
+		[Fact(DisplayName = "Does Not Leak With TextType Html")]
+		public async Task LabelWithHtmlText_DoesNotLeak()
+		{
+			SetupBuilder();
+
+			WeakReference viewReference = null;
+			WeakReference platformViewReference = null;
+			WeakReference handlerReference = null;
+
+			await InvokeOnMainThreadAsync(() =>
+			{
+				var layout = new Grid();
+
+				var label = new Label
+				{
+					Text = @"<a href=""https://www.example.com"">Example HTML link</a>",
+					TextType = TextType.Html
+				};
+
+				layout.Add(label);
+				var handler = CreateHandler<LayoutHandler>(layout);
+				viewReference = new WeakReference(label);
+				handlerReference = new WeakReference(label.Handler);
+				platformViewReference = new WeakReference(label.Handler.PlatformView);
+			});
+
+			await AssertionExtensions.WaitForGC(viewReference, handlerReference, platformViewReference);
+			Assert.False(viewReference.IsAlive, "Label should not be alive!");
+			Assert.False(handlerReference.IsAlive, "Handler should not be alive!");
+			Assert.False(platformViewReference.IsAlive, "PlatformView should not be alive!");
+		}
+
 		[Theory]
 		[ClassData(typeof(TextTransformCases))]
 		public async Task InitialTextTransformApplied(string text, TextTransform transform, string expected)

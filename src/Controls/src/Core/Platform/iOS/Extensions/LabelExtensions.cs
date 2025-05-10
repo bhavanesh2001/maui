@@ -18,6 +18,7 @@ namespace Microsoft.Maui.Controls.Platform
 					break;
 
 				default:
+					platformLabel.UpdateIsTextTypeHtml(false);
 					if (label.FormattedText != null)
 						platformLabel.AttributedText = label.ToNSAttributedString();
 					else

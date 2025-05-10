@@ -75,6 +75,7 @@ namespace Microsoft.Maui.Platform
 
 		internal static void UpdateTextHtml(this UILabel platformLabel, ILabel label)
 		{
+			platformLabel.UpdateIsTextTypeHtml(true);
 			string text = label.Text ?? string.Empty;
 
 			var attr = new NSAttributedStringDocumentAttributes
@@ -95,7 +96,16 @@ namespace Microsoft.Maui.Platform
 
 		internal static void UpdateTextPlainText(this UILabel platformLabel, IText label)
 		{
+			platformLabel.UpdateIsTextTypeHtml(false);
 			platformLabel.Text = label.Text;
+		}
+
+		internal static void UpdateIsTextTypeHtml(this UILabel platformLabel,bool isTextTypeHtml)
+		{
+			if(platformLabel is MauiLabel mauiLabel)
+			{
+				mauiLabel.IsTextTypeHTML = isTextTypeHtml;
+			}
 		}
 	}
 }

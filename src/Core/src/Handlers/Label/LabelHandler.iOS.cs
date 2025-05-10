@@ -9,6 +9,12 @@ namespace Microsoft.Maui.Handlers
 	{
 		protected override MauiLabel CreatePlatformView() => new MauiLabel();
 
+		protected override void DisconnectHandler(MauiLabel platformView)
+		{
+			platformView.Disconnect();
+			base.DisconnectHandler(platformView);
+		}
+
 		public override bool NeedsContainer =>
 			VirtualView?.Background != null ||
 			base.NeedsContainer;

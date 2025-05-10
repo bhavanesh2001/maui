@@ -7,6 +7,7 @@ namespace Microsoft.Maui.Platform
 	internal static class LabelHtmlHelper
 	{
 		// All the supported HTML tags
+		internal const string ElementA = "A";
 		internal const string ElementB = "B";
 		internal const string ElementBr = "BR";
 		internal const string ElementEm = "EM";
@@ -68,6 +69,16 @@ namespace Microsoft.Maui.Platform
 					var divSpan = new Span();
 					inlines.Add(divSpan);
 					currentInlines = divSpan.Inlines;
+					break;
+				case ElementA:
+					var hyperLink = new Hyperlink();
+					var href = element.Attribute("href")?.Value;
+					if(!string.IsNullOrEmpty(href))
+					{
+						hyperLink.NavigateUri = new System.Uri(href);
+					}
+					inlines.Add(hyperLink);
+					currentInlines = hyperLink.Inlines;
 					break;
 			}
 			foreach (var node in element.Nodes())

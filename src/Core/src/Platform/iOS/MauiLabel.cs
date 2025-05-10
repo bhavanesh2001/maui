@@ -2,6 +2,8 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using CoreGraphics;
+using Foundation;
 using Microsoft.Maui.Graphics;
 using ObjCRuntime;
 using UIKit;
@@ -13,7 +15,27 @@ namespace Microsoft.Maui.Platform
 	public class MauiLabel : UILabel, IUIViewLifeCycleEvents
 	{
 		UIControlContentVerticalAlignment _verticalAlignment = UIControlContentVerticalAlignment.Center;
-
+		CGPoint _touchStart;
+		const double maxTapDistance = 2.0;
+		bool _isTextTypeHTML;
+		internal bool IsTextTypeHTML
+		{
+			get => _isTextTypeHTML;
+			set
+			{
+				if (_hyperLinkHelper == null && value)
+				{
+					_hyperLinkHelper = new LabelHyperLinkHelper(this);
+				}
+				else if (!value)
+				{
+					_hyperLinkHelper?.Invalidate();
+					_hyperLinkHelper = null;
+				}
+				_isTextTypeHTML = value;
+			}
+		}
+		LabelHyperLinkHelper _hyperLinkHelper;
 		public UIEdgeInsets TextInsets { get; set; }
 		internal UIControlContentVerticalAlignment VerticalAlignment
 		{
@@ -33,6 +55,26 @@ namespace Microsoft.Maui.Platform
 		{
 		}
 
+		public override void TouchesBegan(NSSet touches, UIEvent evt)
+		{
+			base.TouchesBegan(touches, evt);
+
+			if (!IsTextTypeHTML) return;
+				
+			StoreTouchStart(touches);
+		}
+
+		public override void TouchesEnded(NSSet touches, UIEvent evt)
+		{
+			base.TouchesEnded(touches, evt);
+
+			if (!IsTextTypeHTML) return;
+
+			if (!IsValidTouch(touches, out var location)) return;
+
+			_hyperLinkHelper.TryOpenHyperlinkAt(location);
+		}
+
 		public override void DrawText(RectangleF rect)
 		{
 			rect = TextInsets.InsetRect(rect);
@@ -44,6 +86,34 @@ namespace Microsoft.Maui.Platform
 			}
 
 			base.DrawText(rect);
+		}
+
+		void StoreTouchStart(NSSet touches)
+		{
+			if (touches.AnyObject is UITouch touch)
+			{
+				_touchStart = touch.LocationInView(this);
+			}
+		}
+
+		bool IsValidTouch(NSSet touches, out CGPoint location)
+		{
+			location = default;
+
+			if (AttributedText is null || touches is null || touches.Count == 0)
+			{
+				return false;
+			}
+
+			if (touches.AnyObject is not UITouch touch)
+			{
+				return false;
+			}
+
+			location = touch.LocationInView(this);
+
+			return Math.Abs(location.X - _touchStart.X) <= maxTapDistance &&
+				   Math.Abs(location.Y - _touchStart.Y) <= maxTapDistance;
 		}
 
 		RectangleF AlignVertical(RectangleF rect)
@@ -97,6 +167,12 @@ namespace Microsoft.Maui.Platform
 		{
 			base.MovedToWindow();
 			_movedToWindow?.Invoke(this, EventArgs.Empty);
+		}
+
+		internal void Disconnect()
+		{
+			_hyperLinkHelper?.Invalidate();
+			_hyperLinkHelper = null;
 		}
 	}
 }
