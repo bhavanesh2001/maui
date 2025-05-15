@@ -27,7 +27,7 @@ jobs:
       - name: Run dotnet format (dry-run)
         id: format_check
         run: |
-          dotnet format .\Microsoft.Maui.sln --no-restore --verify-no-changes --exclude Templates/src --exclude-diagnostics CA1822
+          dotnet format .\Microsoft.Maui.sln --no-restore --verify-no-changes --diagnostics-
         continue-on-error: true
 
       - name: Show formatting diff (if any)
