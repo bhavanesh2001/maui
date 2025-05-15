@@ -1,14 +1,16 @@
 name: Format PR Code
+
 on:
   pull_request
 
 permissions:
   pull-requests: write
-  contents: write
+  contents: read
 
 jobs:
   dotnet-format:
     runs-on: windows-latest
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -22,20 +24,39 @@ jobs:
         with:
           dotnet-version: 8.x
 
-      - name: Run dotnet format
+      - name: Run dotnet format (dry-run)
+        id: format_check
         run: |
-          dotnet format .\Microsoft.Maui.sln --no-restore --exclude Templates/src --exclude-diagnostics CA1822
-          git diff
+          dotnet format .\Microsoft.Maui.sln --no-restore --verify-no-changes --exclude Templates/src --exclude-diagnostics CA1822
+        continue-on-error: true
 
-      - name: Commit changes
-        run: |
-          git config --local user.name "github-actions[bot]"
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com>"
-          git add .
-          git commit -m "[housekeeping] Automated PR to fix formatting errors on ${{ github.head_ref }}"
-    
-      - name: Push changes to PR
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git push origin HEAD:${{ github.event.pull_request.head.ref }}
+      - name: Show formatting diff (if any)
+        run: git diff
+
+      - name: Comment on PR if formatting issues found
+        if: steps.format_check.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: [
+                "⚠️ **Formatting issues detected** in your pull request.",
+                "",
+                "Please run the following locally and push the updated code:",
+                "",
+                "```sh",
+                "dotnet format Microsoft.Maui.sln --no-restore --exclude Templates/src --exclude-diagnostics CA1822",
+                "```",
+                "",
+                "Then commit and push to resolve this check."
+              ].join('\n')
+            })
+
+
+      - name: Fail the job if formatting is incorrect
+        if: steps.format_check.outcome == 'failure'
+        run: exit 1

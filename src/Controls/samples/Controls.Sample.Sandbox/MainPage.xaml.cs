@@ -1,9 +1,15 @@
-﻿namespace Maui.Controls.Sample;
+﻿
+namespace Maui.Controls.Sample;
 
 public partial class MainPage : ContentPage
 {
 	public MainPage()
 	{
 		InitializeComponent();
+		something();
+	}
+
+	private void something(){
+		            return;
 	}
 }
