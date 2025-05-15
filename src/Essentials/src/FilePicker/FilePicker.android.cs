@@ -24,10 +24,10 @@ namespace Microsoft.Maui.Storage
 				intent.PutExtra(Intent.ExtraMimeTypes, allowedTypes);
 
 			var pickerIntent = Intent.CreateChooser(intent, options?.PickerTitle ?? "Select file");
-
+			var resultList = new List<FileResult>();
 			try
 			{
-				var resultList = new List<FileResult>();
+				
 				void OnResult(Intent intent)
 				{
 					// The uri returned is only temporary and only lives as long as the Activity that requested it,
@@ -57,7 +57,7 @@ namespace Microsoft.Maui.Storage
 			}
 			catch (OperationCanceledException)
 			{
-				return null;
+				return allowMultiple ? resultList : null;
 			}
 		}
 	}
