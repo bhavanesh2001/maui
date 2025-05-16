@@ -29,8 +29,13 @@ jobs:
 
       - name: Determine if PR is from a fork
         id: fork-check
+        shell: bash
         run: |
-          echo "isFork=$([[ \"${{ env.PR_REPO_FULLNAME }}\" != \"${{ github.repository }}\" ]] && echo true || echo false)" >> $GITHUB_OUTPUT
+          if [[ "$PR_REPO_FULLNAME" != "$GITHUB_REPOSITORY" ]]; then
+            echo "isFork=true" >> $GITHUB_OUTPUT
+          else
+            echo "isFork=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Run dotnet format
         id: format_check
