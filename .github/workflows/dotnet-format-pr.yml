@@ -80,8 +80,18 @@ jobs:
             git commit -m "[housekeeping] Automated PR to fix formatting errors on $PR_BRANCH"
           fi
 
+      - name: Detect if commit was made
+        id: commit-check
+        shell: bash
+        run: |
+          if git log -1 --pretty=%B | grep -q "[housekeeping]"; then
+            echo "commitMade=true" >> $GITHUB_OUTPUT
+          else
+            echo "commitMade=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Push changes to PR (only for same-repo PRs with changes)
-        if: steps.fork-check.outputs.isFork == 'false' && steps.format_check.outcome == 'failure'
+        if: steps.fork-check.outputs.isFork == 'false' && steps.commit-check.outputs.commitMade == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
