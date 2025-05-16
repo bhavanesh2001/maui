@@ -69,6 +69,7 @@ jobs:
 
       - name: Commit changes (only for same-repo PRs)
         if: steps.fork-check.outputs.isFork == 'false'
+        shell: bash
         run: |
           if git diff --quiet; then
             echo "No formatting changes to commit."
