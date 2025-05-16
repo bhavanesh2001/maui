@@ -9,8 +9,7 @@ public partial class MainPage : ContentPage
 		something();
 	}
 
-	private void something()
-	{
-		return;
+	private void something()  {
+		              return;
 	}
 }
