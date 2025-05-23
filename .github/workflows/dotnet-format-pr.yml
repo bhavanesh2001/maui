@@ -1,6 +1,7 @@
 name: Format PR Code
+
 on:
-  pull_request
+  pull_request:
 
 permissions:
   pull-requests: write
@@ -9,12 +10,16 @@ permissions:
 jobs:
   dotnet-format:
     runs-on: windows-latest
+    env:
+      PR_BRANCH: ${{ github.event.pull_request.head.ref }}
+      PR_REPO_FULLNAME: ${{ github.event.pull_request.head.repo.full_name }}
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ env.PR_BRANCH }}
+          repository: ${{ env.PR_REPO_FULLNAME }}
           fetch-depth: 0
 
       - name: Setup .NET Core SDK
@@ -22,20 +27,68 @@ jobs:
         with:
           dotnet-version: 8.x
 
+      - name: Determine if PR is from a fork
+        id: fork-check
+        shell: bash
+        run: |
+          if [[ "$PR_REPO_FULLNAME" != "$GITHUB_REPOSITORY" ]]; then
+            echo "isFork=true" >> $GITHUB_OUTPUT
+          else
+            echo "isFork=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Run dotnet format
+        id: format_check
         run: |
           dotnet format .\Microsoft.Maui.sln --no-restore --exclude Templates/src --exclude-diagnostics CA1822
           git diff
+        continue-on-error: true
 
-      - name: Commit changes
+      - name: Comment if formatting needed (forked PR)
+        if: steps.fork-check.outputs.isFork == 'true' && steps.format_check.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: [
+                "\u26a0\ufe0f **Formatting issues detected** in your pull request.",
+                "",
+                "Please run the following locally and push the updated code:",
+                "",
+                "```sh",
+                "dotnet format Microsoft.Maui.sln --no-restore --exclude Templates/src --exclude-diagnostics CA1822",
+                "```",
+                "",
+                "Then commit and push to resolve this check."
+              ].join('\n')
+            })
+
+      - name: Commit changes (only for same-repo PRs)
+        if: steps.fork-check.outputs.isFork == 'false'
+        shell: bash
         run: |
-          git config --local user.name "github-actions[bot]"
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com>"
-          git add .
-          git commit -m "[housekeeping] Automated PR to fix formatting errors on ${{ github.head_ref }}"
-    
+          if git diff --quiet; then
+            echo "No formatting changes to commit."
+            echo "commit_made=false" >> $GITHUB_ENV
+          else
+            git config --local user.name "github-actions[bot]"
+            git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com>"
+            git add .
+            git commit -m "[housekeeping] Automated PR to fix formatting errors on ${{ github.head_ref }}"
+            echo "commit_made=true" >> $GITHUB_ENV
+          fi
+
       - name: Push changes to PR
+        if: steps.fork-check.outputs.isFork == 'false' && env.commit_made == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git push origin HEAD:${{ github.event.pull_request.head.ref }}
+
+      - name: Fail if formatting issues exist (forked PRs only)
+        if: steps.fork-check.outputs.isFork == 'true' && steps.format_check.outcome == 'failure'
+        run: exit 1
