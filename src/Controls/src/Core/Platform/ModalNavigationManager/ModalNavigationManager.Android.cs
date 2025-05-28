@@ -331,7 +331,7 @@ namespace Microsoft.Maui.Controls.Platform
 
 				_navigationRootManager = modalContext.GetNavigationRootManager();
 				_navigationRootManager.Connect(_modal, modalContext);
-				
+
 				UpdateBackgroundColor();
 
 				var rootView = _navigationRootManager?.RootView ??
