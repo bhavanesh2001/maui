@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Maui.Controls.Sample.Sandbox.ImagesPage"
+             Title="ImagesPage">
+    <Grid RowDefinitions="Auto,Auto,*">
+        <Button Text="Load ItemsSource" />
+        <Label Grid.Row="1" x:Name="timeLabel" />
+        <CollectionView Grid.Row="2" ItemsSource="{Binding Images}" SizeChanged="CollectionView_SizeChanged">
+            <!-- <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical" Span="1"/>            
+            </CollectionView.ItemsLayout> -->
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <VerticalStackLayout>
+                        <Image HeightRequest="300" Source="{Binding .}" />
+                        <Label Text="{Binding .}" MaxLines="1" HorizontalOptions="Center"  LineBreakMode="TailTruncation"/>
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

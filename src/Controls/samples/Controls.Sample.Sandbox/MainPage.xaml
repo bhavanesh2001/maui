@@ -2,4 +2,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Maui.Controls.Sample.MainPage"
              xmlns:local="clr-namespace:Maui.Controls.Sample">
+             <VerticalStackLayout Spacing="20" Margin="10">
+                <Grid ColumnDefinitions="*,50" Padding="5" >
+                    <Label Text="Use Manual Layout ?"/>
+                    <Switch x:Name="useManualLayout" />
+                </Grid>
+                <Button Text="Open Images From App Reosource" Clicked="OpenFromAppResources_Clicked" />
+                <Button Text="Open Images Form Local Storage" Clicked="OpenFormLocalStorage_Clicked" />
+                <Button Text="Open Images From URL's" Clicked="OpenFromUrl_Clicked" />
+             </VerticalStackLayout>
 </ContentPage>
