@@ -2,4 +2,29 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Maui.Controls.Sample.MainPage"
              xmlns:local="clr-namespace:Maui.Controls.Sample">
+             <VerticalStackLayout>
+                <Button Text="Set Itemssource" Clicked="Button_Clicked2"/>
+                      <CollectionView
+                    SelectionMode="Single"  ItemsSource="{Binding Items}" 
+                    x:Name="MyCollectionView"  
+                    Margin="10">
+        <CollectionView.ItemsLayout>
+            <LinearItemsLayout Orientation="Horizontal" />
+        </CollectionView.ItemsLayout>
+        <CollectionView.ItemTemplate>
+            <DataTemplate>
+                <Border Stroke="LightGray" WidthRequest="200"  Padding="10" Margin="5">
+                  <VerticalStackLayout>
+                    <Image HeightRequest ="400" Source="dotnet_bot.png"/>
+                      <Label Text="{Binding .}" 
+                           FontSize="18"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center"/>
+                  </VerticalStackLayout>
+                </Border>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+
+    </CollectionView>
+             </VerticalStackLayout>
 </ContentPage>
