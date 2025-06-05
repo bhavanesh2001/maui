@@ -28,6 +28,7 @@ namespace Microsoft.Maui.Handlers
 			[nameof(IWindow.MinimumWidth)] = MapMinimumWidth,
 			[nameof(IWindow.MinimumHeight)] = MapMinimumHeight,
 			[nameof(IWindow.TitleBar)] = MapTitleBar,
+			[nameof(IWindow.IsResizable)] = MapIsResizable,
 #endif
 #if ANDROID || WINDOWS || TIZEN
 			[nameof(IToolbarElement.Toolbar)] = MapToolbar,

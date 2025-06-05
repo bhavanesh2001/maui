@@ -64,6 +64,15 @@ namespace Microsoft.Maui.Controls
 		public static readonly BindableProperty TitleBarProperty = BindableProperty.Create(
 			nameof(TitleBar), typeof(TitleBar), typeof(Window), null, propertyChanged: TitleBarChanged);
 
+		public static readonly BindableProperty IsResizableProperty = BindableProperty.Create(
+			nameof(IsResizable), typeof(bool), typeof(Window), true);
+
+		public bool IsResizable
+		{
+			get => (bool)GetValue(IsResizableProperty);
+			set => SetValue(IsResizableProperty, value);
+		}
+
 		HashSet<IWindowOverlay> _overlays = new HashSet<IWindowOverlay>();
 		List<IVisualTreeElement> _visualChildren;
 		Toolbar? _toolbar;

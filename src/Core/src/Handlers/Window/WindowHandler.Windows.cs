@@ -186,6 +186,15 @@ namespace Microsoft.Maui.Handlers
 				.UpdateTitleBar(window, handler.MauiContext);
 		}
 
+		internal static void MapIsResizable(IWindowHandler handler, IWindow window)
+		{
+			var appWindow = handler.PlatformView.GetAppWindow();
+			if (appWindow?.Presenter is UI.Windowing.OverlappedPresenter presenter )
+			{
+				presenter.IsResizable = window.IsResizable;
+			}
+		}
+
 		void OnWindowChanged(AppWindow sender, AppWindowChangedEventArgs args)
 		{
 			if (!args.DidSizeChange && !args.DidPositionChange)

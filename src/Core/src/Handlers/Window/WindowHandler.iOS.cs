@@ -44,6 +44,11 @@ namespace Microsoft.Maui.Handlers
 				controller.SetUpTitleBar(window, mauiContext);
 			}
 		}
+
+		internal static void MapIsResizable(IWindowHandler handler, IWindow window)
+		{
+			
+		}
 #endif
 
 		public static void MapContent(IWindowHandler handler, IWindow window)

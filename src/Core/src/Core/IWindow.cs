@@ -132,6 +132,7 @@ namespace Microsoft.Maui
 
 #if WINDOWS || MACCATALYST
 		ITitleBar? TitleBar => null;
+		bool IsResizable => true;
 #endif
 
 #if WINDOWS
