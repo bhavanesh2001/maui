@@ -616,6 +616,8 @@ namespace Microsoft.Maui.Controls
 		{
 			if (oldPage != null)
 			{
+				oldPage.ClearInternalChildren();
+
 				_menuBarTracker.Target = null;
 				_visualChildren.Remove(oldPage);
 				RemoveLogicalChild(oldPage);

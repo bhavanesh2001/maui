@@ -19,5 +19,18 @@ namespace Microsoft.Maui.Controls.Platform
 			else
 				return currentPage;
 		}
+
+		internal static void ClearInternalChildren(this Page page)
+		{
+			// Removes all pushed pages from InternalChildren, preserving the root page to maintain NavigationPage validity.
+			var internalChildren = page.InternalChildren;
+			if (internalChildren.Count > 1)
+			{
+				for (int i = internalChildren.Count - 1; i > 0; i--)
+				{
+					internalChildren.Remove(internalChildren[i]);
+				}
+			}
+		}
 	}
 }
