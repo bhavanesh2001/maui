@@ -614,6 +614,51 @@ public class MemoryTests : ControlsHandlerTestBase
 
 		Assert.True(AnimationExtensions.TweenersCounter <= 2);
 	}
+
+	[Fact("Pushed page in NavigationPage is collected when Window.Page is replaced")]
+	public async Task PushedPageInNavigationPageIsCollected_WhenWindowPageIsReplaced()
+	{
+		SetupBuilder();
+
+		var refernces = new List<WeakReference>();
+
+		var initialRoot = new ContentPage { Title = "Root Page" };
+		var originalNavPage = new NavigationPage(initialRoot);
+		var window = new Window(originalNavPage);
+
+		await CreateHandlerAndAddToWindow(window, async () =>
+		{
+			var pushedPage = new ContentPage
+			{
+				Title = "Pushed Page",
+				Content = new StackLayout
+				{
+					Children =
+			{
+				new Label { Text = "Old Label" }
+			}
+				}
+			};
+
+			await originalNavPage.Navigation.PushAsync(pushedPage);
+			await OnLoadedAsync(pushedPage);
+
+			refernces.Add(new(pushedPage));
+			refernces.Add(new(pushedPage.Handler));
+			refernces.Add(new(pushedPage.Handler.PlatformView));
+
+			window.Page = new NavigationPage(new ContentPage
+			{
+				Title = "New Root Page",
+				Content = new Label { Text = "New content" }
+			});
+
+			pushedPage = null;
+			originalNavPage = null;
+		});
+
+		await AssertionExtensions.WaitForGC(refernces.ToArray());
+	}
 }
 
 sealed class AnimationPage : ContentPage
