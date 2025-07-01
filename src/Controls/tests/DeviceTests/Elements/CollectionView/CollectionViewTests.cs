@@ -10,6 +10,9 @@ using System.Xml.Linq;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Handlers.Compatibility;
 using Microsoft.Maui.Controls.Handlers.Items;
+#if IOS || MACCATALYST
+using Microsoft.Maui.Controls.Handlers.Items2;
+#endif
 using Microsoft.Maui.Controls.Platform;
 using Microsoft.Maui.DeviceTests.Stubs;
 using Microsoft.Maui.Graphics;
@@ -26,6 +29,8 @@ namespace Microsoft.Maui.DeviceTests
 	[Category(TestCategory.CollectionView)]
 	public partial class CollectionViewTests : ControlsHandlerTestBase
 	{
+		//subcalss used to enable CV2 tests
+		public class CollectionView2 : CollectionView { }
 		void SetupBuilder()
 		{
 			EnsureHandlerCreated(builder =>
@@ -38,6 +43,9 @@ namespace Microsoft.Maui.DeviceTests
 					handlers.AddHandler<Window, WindowHandlerStub>();
 
 					handlers.AddHandler<CollectionView, CollectionViewHandler>();
+#if IOS || MACCATALYST
+					handlers.AddHandler<CollectionView2, CollectionViewHandler2>();
+#endif
 					handlers.AddHandler<VerticalStackLayout, LayoutHandler>();
 					handlers.AddHandler<Grid, LayoutHandler>();
 					handlers.AddHandler<Label, LabelHandler>();
