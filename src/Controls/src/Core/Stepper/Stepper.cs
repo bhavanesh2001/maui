@@ -40,7 +40,7 @@ namespace Microsoft.Maui.Controls
 			propertyChanged: (bindable, oldValue, newValue) =>
 			{
 				var stepper = (Stepper)bindable;
-				stepper.ValueChanged?.Invoke(stepper, new ValueChangedEventArgs((double)oldValue, (double)newValue));
+				stepper.Dispatcher.Dispatch(() => stepper.ValueChanged?.Invoke(stepper, new ValueChangedEventArgs((double)oldValue, (double)newValue)));
 			});
 
 		int digits = 4;

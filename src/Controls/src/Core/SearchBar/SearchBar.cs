@@ -133,9 +133,11 @@ namespace Microsoft.Maui.Controls
 
 			if (cmd != null && !cmd.CanExecute(SearchCommandParameter))
 				return;
-
-			cmd?.Execute(SearchCommandParameter);
-			SearchButtonPressed?.Invoke(this, EventArgs.Empty);
+			Dispatcher.Dispatch(() =>
+			{
+				cmd?.Execute(SearchCommandParameter);
+				SearchButtonPressed?.Invoke(this, EventArgs.Empty);
+			});
 		}
 
 		/// <inheritdoc/>

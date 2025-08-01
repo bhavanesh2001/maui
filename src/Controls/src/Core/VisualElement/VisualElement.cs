@@ -1244,7 +1244,7 @@ namespace Microsoft.Maui.Controls
 				return;
 
 			Handler?.Invoke(nameof(IView.Unfocus));
-			FocusChangeRequested?.Invoke(this, new FocusRequestArgs());
+			Dispatcher.Dispatch(() => FocusChangeRequested?.Invoke(this, new FocusRequestArgs()));
 		}
 
 		/// <summary>
@@ -1303,7 +1303,7 @@ namespace Microsoft.Maui.Controls
 		/// Raises the <see cref="ChildrenReordered"/> event.
 		/// </summary>
 		protected void OnChildrenReordered()
-			=> ChildrenReordered?.Invoke(this, EventArgs.Empty);
+			=> Dispatcher.Dispatch(() => ChildrenReordered?.Invoke(this, EventArgs.Empty));
 
 		/// <summary>
 		/// Method that is called when a layout measurement happens.
@@ -1364,7 +1364,7 @@ namespace Microsoft.Maui.Controls
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		public event EventHandler<FocusRequestArgs> FocusChangeRequested;
 		internal void InvokeFocusChangeRequested(FocusRequestArgs args) =>
-			FocusChangeRequested?.Invoke(this, args);
+			Dispatcher.Dispatch(() => FocusChangeRequested?.Invoke(this, args));
 		internal bool HasFocusChangeRequestedEvent => FocusChangeRequested is not null;
 
 		/// <summary>
@@ -1412,7 +1412,7 @@ namespace Microsoft.Maui.Controls
 
 		private protected void InvokeMeasureInvalidated(InvalidationTrigger trigger)
 		{
-			MeasureInvalidated?.Invoke(this, new InvalidationEventArgs(trigger));
+			Dispatcher.Dispatch(() => MeasureInvalidated?.Invoke(this, new InvalidationEventArgs(trigger)));
 		}
 
 		/// <summary>
@@ -1549,7 +1549,7 @@ namespace Microsoft.Maui.Controls
 						SetInheritedBindingContext(stateTrigger, BindingContext);
 		}
 
-		void OnFocused() => Focused?.Invoke(this, new FocusEventArgs(this, true));
+		void OnFocused() => Dispatcher.Dispatch(() => Focused?.Invoke(this, new FocusEventArgs(this, true)));
 
 		internal void ChangeVisualStateInternal() => ChangeVisualState();
 
@@ -1720,7 +1720,7 @@ namespace Microsoft.Maui.Controls
 			((VisualElement)bindable).InvalidateMeasureInternal(InvalidationTrigger.SizeRequestChanged);
 		}
 
-		void OnUnfocus() => Unfocused?.Invoke(this, new FocusEventArgs(this, false));
+		void OnUnfocus() => Dispatcher.Dispatch(() =>Unfocused?.Invoke(this, new FocusEventArgs(this, false)));
 
 		bool IFlowDirectionController.ApplyEffectiveFlowDirectionToChildContainer => true;
 
@@ -1773,7 +1773,7 @@ namespace Microsoft.Maui.Controls
 			if (previousHeight != Height || previousWidth != Width)
 			{
 				SizeAllocated(Width, Height);
-				SizeChanged?.Invoke(this, EventArgs.Empty);
+				Dispatcher.Dispatch(() => SizeChanged?.Invoke(this, EventArgs.Empty));
 			}
 
 			BatchCommit();
@@ -2220,7 +2220,7 @@ namespace Microsoft.Maui.Controls
 				// and a previous subscriber has already invoked the UpdatePlatformUnloadedLoadedWiring path
 				if (loadedAlreadyFired && _isLoadedFired)
 				{
-					value?.Invoke(this, EventArgs.Empty);
+					Dispatcher.Dispatch(() => value?.Invoke(this, EventArgs.Empty));
 				}
 
 			}
@@ -2269,7 +2269,7 @@ namespace Microsoft.Maui.Controls
 				return;
 
 			_isLoadedFired = true;
-			_loaded?.Invoke(this, EventArgs.Empty);
+			Dispatcher.Dispatch(() =>_loaded?.Invoke(this, EventArgs.Empty));
 
 			// If the user is also watching unloaded we need to verify
 			// unloaded is still correctly being watched for.
@@ -2287,7 +2287,7 @@ namespace Microsoft.Maui.Controls
 				return;
 
 			_isLoadedFired = false;
-			_unloaded?.Invoke(this, EventArgs.Empty);
+			Dispatcher.Dispatch(() =>_unloaded?.Invoke(this, EventArgs.Empty));
 
 			// If the user is also watching loaded we need to verify
 			// loaded is still correctly being watched for.
@@ -2305,7 +2305,7 @@ namespace Microsoft.Maui.Controls
 
 			visualElement.UpdatePlatformUnloadedLoadedWiring(newWindow, oldWindow);
 			visualElement.InvalidateStateTriggers(newValue != null);
-			visualElement._windowChanged?.Invoke(visualElement, EventArgs.Empty);
+			visualElement.Dispatcher.Dispatch(() =>visualElement._windowChanged?.Invoke(visualElement, EventArgs.Empty));
 		}
 
 		void OnWindowHandlerChanged(object? sender, EventArgs e)

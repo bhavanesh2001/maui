@@ -150,7 +150,7 @@ namespace Microsoft.Maui.Controls
 
 		protected virtual void OnTextChanged(string oldValue, string newValue)
 		{
-			TextChanged?.Invoke(this, new TextChangedEventArgs(oldValue, newValue));
+			Dispatcher.Dispatch(() =>TextChanged?.Invoke(this, new TextChangedEventArgs(oldValue, newValue)));
 		}
 
 		void ITextElement.OnTextColorPropertyChanged(Color oldValue, Color newValue)

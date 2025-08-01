@@ -6,4 +6,9 @@ public partial class MainPage : ContentPage
 	{
 		InitializeComponent();
 	}
+
+	private void SearchBar_SearchButtonPressed(object sender, EventArgs e)
+	{
+		Console.WriteLine("Hello");
+	}
 }

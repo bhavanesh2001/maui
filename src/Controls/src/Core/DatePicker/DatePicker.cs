@@ -200,7 +200,9 @@ namespace Microsoft.Maui.Controls
 			EventHandler<DateChangedEventArgs> selected = datePicker.DateSelected;
 
 			if (selected != null)
-				selected(datePicker, new DateChangedEventArgs((DateTime)oldValue, (DateTime)newValue));
+			{
+				datePicker.Dispatcher.Dispatch(() => selected(datePicker, new DateChangedEventArgs((DateTime)oldValue, (DateTime)newValue)));
+			}
 		}
 
 		static bool ValidateMaximumDate(BindableObject bindable, object value)

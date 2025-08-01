@@ -192,22 +192,22 @@ namespace Microsoft.Maui.Controls
 		public void Open(OpenSwipeItem openSwipeItem, bool animated = true)
 #pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 		{
-			OpenRequested?.Invoke(this, new OpenRequestedEventArgs(openSwipeItem, animated));
+			Dispatcher.Dispatch(() => OpenRequested?.Invoke(this, new OpenRequestedEventArgs(openSwipeItem, animated)));
 			((ISwipeView)this).RequestOpen(new SwipeViewOpenRequest(openSwipeItem, animated));
 		}
 
 		/// <include file="../../docs/Microsoft.Maui.Controls/SwipeView.xml" path="//Member[@MemberName='Close']/Docs/*" />
 		public void Close(bool animated = true)
 		{
-			CloseRequested?.Invoke(this, new CloseRequestedEventArgs(animated));
+			Dispatcher.Dispatch(() => CloseRequested?.Invoke(this, new CloseRequestedEventArgs(animated)));
 			((ISwipeView)this).RequestClose(new SwipeViewCloseRequest(animated));
 		}
 
-		void ISwipeViewController.SendSwipeStarted(SwipeStartedEventArgs args) => SwipeStarted?.Invoke(this, args);
+		void ISwipeViewController.SendSwipeStarted(SwipeStartedEventArgs args) => Dispatcher.Dispatch(() => SwipeStarted?.Invoke(this, args));
 
-		void ISwipeViewController.SendSwipeChanging(SwipeChangingEventArgs args) => SwipeChanging?.Invoke(this, args);
+		void ISwipeViewController.SendSwipeChanging(SwipeChangingEventArgs args) => Dispatcher.Dispatch(() => SwipeChanging?.Invoke(this, args));
 
-		void ISwipeViewController.SendSwipeEnded(SwipeEndedEventArgs args) => SwipeEnded?.Invoke(this, args);
+		void ISwipeViewController.SendSwipeEnded(SwipeEndedEventArgs args) => Dispatcher.Dispatch(() => SwipeEnded?.Invoke(this, args));
 
 		SwipeItems SwipeItemsDefaultValueCreator() => new SwipeItems();
 

@@ -358,7 +358,7 @@ namespace Microsoft.Maui.Controls
 		{
 			var picker = (Picker)bindable;
 			picker.UpdateSelectedItem(picker.SelectedIndex);
-			picker.SelectedIndexChanged?.Invoke(bindable, EventArgs.Empty);
+			picker.Dispatcher.Dispatch(() => picker.SelectedIndexChanged?.Invoke(bindable, EventArgs.Empty));
 		}
 
 		static void OnSelectedItemChanged(BindableObject bindable, object oldValue, object newValue)

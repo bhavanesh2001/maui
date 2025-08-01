@@ -177,12 +177,15 @@ namespace Microsoft.Maui.Controls
 		{
 			if (IsEnabled)
 			{
-				Completed?.Invoke(this, EventArgs.Empty);
-
-				if (ReturnCommand != null && ReturnCommand.CanExecute(ReturnCommandParameter))
+				Dispatcher.Dispatch(() =>
 				{
-					ReturnCommand.Execute(ReturnCommandParameter);
-				}
+					Completed?.Invoke(this, EventArgs.Empty);
+
+					if (ReturnCommand != null && ReturnCommand.CanExecute(ReturnCommandParameter))
+					{
+						ReturnCommand.Execute(ReturnCommandParameter);
+					}
+				});
 			}
 		}
 

@@ -374,7 +374,7 @@ namespace Microsoft.Maui.Controls
 				RadioButtonGroup.UpdateRadioButtonGroup(this);
 
 			ChangeVisualState();
-			CheckedChanged?.Invoke(this, new CheckedChangedEventArgs(isChecked));
+			Dispatcher.Dispatch(() =>CheckedChanged?.Invoke(this, new CheckedChangedEventArgs(isChecked)));
 		}
 
 		void OnValuePropertyChanged()

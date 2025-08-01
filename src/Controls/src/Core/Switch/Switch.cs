@@ -18,8 +18,9 @@ namespace Microsoft.Maui.Controls
 		/// <summary>Bindable property for <see cref="IsToggled"/>.</summary>
 		public static readonly BindableProperty IsToggledProperty = BindableProperty.Create(nameof(IsToggled), typeof(bool), typeof(Switch), false, propertyChanged: (bindable, oldValue, newValue) =>
 		{
-			((Switch)bindable).Toggled?.Invoke(bindable, new ToggledEventArgs((bool)newValue));
-			((Switch)bindable).ChangeVisualState();
+			var _switch = bindable as Switch;
+			_switch.Dispatcher.Dispatch(() => _switch.Toggled?.Invoke(bindable, new ToggledEventArgs((bool)newValue)));
+			_switch.ChangeVisualState();
 			((IView)bindable)?.Handler?.UpdateValue(nameof(ISwitch.TrackColor));
 
 		}, defaultBindingMode: BindingMode.TwoWay);

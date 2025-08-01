@@ -167,21 +167,21 @@ namespace Microsoft.Maui.Controls
 		public void GoBack()
 		{
 			Handler?.Invoke(nameof(IWebView.GoBack));
-			_goBackRequested?.Invoke(this, EventArgs.Empty);
+			Dispatcher.Dispatch(() => _goBackRequested?.Invoke(this, EventArgs.Empty));
 		}
 
 		/// <include file="../../docs/Microsoft.Maui.Controls/WebView.xml" path="//Member[@MemberName='GoForward']/Docs/*" />
 		public void GoForward()
 		{
 			Handler?.Invoke(nameof(IWebView.GoForward));
-			_goForwardRequested?.Invoke(this, EventArgs.Empty);
+			Dispatcher.Dispatch(() =>_goForwardRequested?.Invoke(this, EventArgs.Empty));
 		}
 
 		/// <include file="../../docs/Microsoft.Maui.Controls/WebView.xml" path="//Member[@MemberName='Reload']/Docs/*" />
 		public void Reload()
 		{
 			Handler?.Invoke(nameof(IWebView.Reload));
-			_reloadRequested?.Invoke(this, EventArgs.Empty);
+			Dispatcher.Dispatch(() =>_reloadRequested?.Invoke(this, EventArgs.Empty));
 		}
 
 		/// <summary>
@@ -267,12 +267,12 @@ namespace Microsoft.Maui.Controls
 
 		void IWebViewController.SendNavigated(WebNavigatedEventArgs args)
 		{
-			Navigated?.Invoke(this, args);
+			Dispatcher.Dispatch(() => Navigated?.Invoke(this, args));
 		}
 
 		void IWebViewController.SendNavigating(WebNavigatingEventArgs args)
 		{
-			Navigating?.Invoke(this, args);
+			Dispatcher.Dispatch(() =>Navigating?.Invoke(this, args));
 		}
 
 		event EventHandler _reloadRequested;

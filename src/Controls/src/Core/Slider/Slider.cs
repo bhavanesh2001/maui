@@ -34,7 +34,7 @@ namespace Microsoft.Maui.Controls
 		}, propertyChanged: (bindable, oldValue, newValue) =>
 		{
 			var slider = (Slider)bindable;
-			slider.ValueChanged?.Invoke(slider, new ValueChangedEventArgs((double)oldValue, (double)newValue));
+			slider.Dispatcher.Dispatch(() => slider.ValueChanged?.Invoke(slider, new ValueChangedEventArgs((double)oldValue, (double)newValue)));
 		});
 
 		/// <summary>Bindable property for <see cref="MinimumTrackColor"/>.</summary>
@@ -153,8 +153,11 @@ namespace Microsoft.Maui.Controls
 		{
 			if (IsEnabled)
 			{
-				DragStartedCommand?.Execute(null);
-				DragStarted?.Invoke(this, null);
+				Dispatcher.Dispatch(() =>
+				{
+					DragStartedCommand?.Execute(null);
+					DragStarted?.Invoke(this, null);
+				});
 			}
 		}
 
@@ -162,8 +165,11 @@ namespace Microsoft.Maui.Controls
 		{
 			if (IsEnabled)
 			{
-				DragCompletedCommand?.Execute(null);
-				DragCompleted?.Invoke(this, null);
+				Dispatcher.Dispatch(() =>
+				{
+					DragCompletedCommand?.Execute(null);
+					DragCompleted?.Invoke(this, null);
+				});
 			}
 		}
 

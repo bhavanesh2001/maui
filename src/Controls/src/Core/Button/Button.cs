@@ -249,7 +249,7 @@ namespace Microsoft.Maui.Controls
 		/// Should not be called manually outside of .NET MAUI.
 		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public void SendClicked() => ButtonElement.ElementClicked(this, this);
+		public void SendClicked() => Dispatcher.Dispatch(() => ButtonElement.ElementClicked(this, this));
 
 		/// <summary>
 		/// Gets whether or not the button is currently pressed.
@@ -264,23 +264,23 @@ namespace Microsoft.Maui.Controls
 		/// Should not be called manually outside of .NET MAUI.
 		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public void SendPressed() => ButtonElement.ElementPressed(this, this);
+		public void SendPressed() => Dispatcher.Dispatch(() => ButtonElement.ElementPressed(this, this));
 
 		/// <summary>
 		/// Internal method to trigger the <see cref="Released"/> event.
 		/// Should not be called manually outside of .NET MAUI.
 		/// </summary>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public void SendReleased() => ButtonElement.ElementReleased(this, this);
+		public void SendReleased() => Dispatcher.Dispatch(() => ButtonElement.ElementReleased(this, this));
 
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		void IButtonElement.PropagateUpClicked() => Clicked?.Invoke(this, EventArgs.Empty);
+		void IButtonElement.PropagateUpClicked() => Dispatcher.Dispatch(() => Clicked?.Invoke(this, EventArgs.Empty));
 
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		void IButtonElement.PropagateUpPressed() => Pressed?.Invoke(this, EventArgs.Empty);
+		void IButtonElement.PropagateUpPressed() => Dispatcher.Dispatch(() => Pressed?.Invoke(this, EventArgs.Empty));
 
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		void IButtonElement.PropagateUpReleased() => Released?.Invoke(this, EventArgs.Empty);
+		void IButtonElement.PropagateUpReleased() => Dispatcher.Dispatch(() => Released?.Invoke(this, EventArgs.Empty));
 
 		/// <summary>
 		/// Gets or sets a value that indicates whether the font for the text of this button is bold, italic, or neither.

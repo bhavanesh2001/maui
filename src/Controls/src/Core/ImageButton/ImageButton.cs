@@ -182,29 +182,29 @@ namespace Microsoft.Maui.Controls
 		/// <include file="../../docs/Microsoft.Maui.Controls/ImageButton.xml" path="//Member[@MemberName='SendClicked']/Docs/*" />
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		public void SendClicked() =>
-			ButtonElement.ElementClicked(this, this);
+			Dispatcher.Dispatch(() => ButtonElement.ElementClicked(this, this));
 
 		/// <include file="../../docs/Microsoft.Maui.Controls/ImageButton.xml" path="//Member[@MemberName='SendPressed']/Docs/*" />
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		public void SendPressed() =>
-			ButtonElement.ElementPressed(this, this);
+			Dispatcher.Dispatch(() => ButtonElement.ElementPressed(this, this));
 
 		/// <include file="../../docs/Microsoft.Maui.Controls/ImageButton.xml" path="//Member[@MemberName='SendReleased']/Docs/*" />
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		public void SendReleased() =>
-			ButtonElement.ElementReleased(this, this);
+			Dispatcher.Dispatch(() => ButtonElement.ElementReleased(this, this));
 
 		/// <include file="../../docs/Microsoft.Maui.Controls/ImageButton.xml" path="//Member[@MemberName='PropagateUpClicked']/Docs/*" />
-		public void PropagateUpClicked() =>
-			Clicked?.Invoke(this, EventArgs.Empty);
+		public void PropagateUpClicked() => 
+			Dispatcher.Dispatch(() => Clicked?.Invoke(this, EventArgs.Empty));
 
 		/// <include file="../../docs/Microsoft.Maui.Controls/ImageButton.xml" path="//Member[@MemberName='PropagateUpPressed']/Docs/*" />
 		public void PropagateUpPressed() =>
-			Pressed?.Invoke(this, EventArgs.Empty);
+			Dispatcher.Dispatch(() => Pressed?.Invoke(this, EventArgs.Empty));
 
 		/// <include file="../../docs/Microsoft.Maui.Controls/ImageButton.xml" path="//Member[@MemberName='PropagateUpReleased']/Docs/*" />
 		public void PropagateUpReleased() =>
-			Released?.Invoke(this, EventArgs.Empty);
+			Dispatcher.Dispatch(() => Released?.Invoke(this, EventArgs.Empty));
 
 		/// <include file="../../docs/Microsoft.Maui.Controls/ImageButton.xml" path="//Member[@MemberName='RaiseImageSourcePropertyChanged']/Docs/*" />
 		public void RaiseImageSourcePropertyChanged() =>

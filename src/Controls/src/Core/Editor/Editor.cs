@@ -109,7 +109,7 @@ namespace Microsoft.Maui.Controls
 		/// <include file="../../docs/Microsoft.Maui.Controls/Editor.xml" path="//Member[@MemberName='SendCompleted']/Docs/*" />
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		public void SendCompleted()
-			=> Completed?.Invoke(this, EventArgs.Empty);
+			=> Dispatcher.Dispatch(() => Completed?.Invoke(this, EventArgs.Empty));
 
 		protected override void OnTextChanged(string oldValue, string newValue)
 		{

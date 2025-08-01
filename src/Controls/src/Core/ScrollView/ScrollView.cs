@@ -109,7 +109,7 @@ namespace Microsoft.Maui.Controls
 			ScrollX = x;
 			ScrollY = y;
 
-			Scrolled?.Invoke(this, new ScrolledEventArgs(x, y));
+			Dispatcher.Dispatch(() => Scrolled?.Invoke(this, new ScrolledEventArgs(x, y)));
 		}
 
 		#endregion IScrollViewController
@@ -372,7 +372,7 @@ namespace Microsoft.Maui.Controls
 		void OnScrollToRequested(ScrollToRequestedEventArgs e)
 		{
 			CheckTaskCompletionSource();
-			ScrollToRequested?.Invoke(this, e);
+			Dispatcher.Dispatch(() => ScrollToRequested?.Invoke(this, e));
 
 			if (Handler is null)
 				_pendingScrollToRequested = e;

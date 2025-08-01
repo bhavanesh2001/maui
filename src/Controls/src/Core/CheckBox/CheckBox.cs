@@ -18,9 +18,10 @@ namespace Microsoft.Maui.Controls
 			BindableProperty.Create(nameof(IsChecked), typeof(bool), typeof(CheckBox), false,
 				propertyChanged: (bindable, oldValue, newValue) =>
 				{
-					((CheckBox)bindable).Handler?.UpdateValue(nameof(ICheckBox.Foreground));
-					((CheckBox)bindable).CheckedChanged?.Invoke(bindable, new CheckedChangedEventArgs((bool)newValue));
-					((CheckBox)bindable).ChangeVisualState();
+					var checkbox = bindable as CheckBox;
+					checkbox.Handler?.UpdateValue(nameof(ICheckBox.Foreground));
+					checkbox.Dispatcher.Dispatch(() => checkbox.CheckedChanged?.Invoke(bindable, new CheckedChangedEventArgs((bool)newValue)));
+					checkbox.ChangeVisualState();
 				}, defaultBindingMode: BindingMode.TwoWay);
 
 		/// <summary>Bindable property for <see cref="Color"/>.</summary>
